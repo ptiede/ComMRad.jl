@@ -31,4 +31,4 @@ function ChainRulesCore.rrule(::typeof(copy), x)
 end
 
 # Enzyme.EnzymeRules.inactive(::typeof(Base.dataids), u::StructArray) = nothing
-# Enzyme.EnzymeRules.inactive(::typeof(Base.unalias), u::StructArray, args...) = nothing
+# Enzyme.EnzymeRules.inactive(::typeof(Base.mightalias), args...) = nothing

@@ -2,8 +2,9 @@ struct ConditionedLikelihood{F, O}
     kernel::F
     obs::O
 end
-DensityInterface.logdensityof(d::ConditionedLikelihood, μ) = logdensityof(d.kernel(μ), d.obs)
-
+DensityInterface.logdensityof(d::ConditionedLikelihood, μ) = (logdensityof(d.kernel(μ), d.obs))
+_obs(d::ConditionedLikelihood) = d.obs
+Enzyme.EnzymeRules.inactive(::typeof(_obs), ::ConditionedLikelihood) = nothing
 
 """
     likelihood(d::ConditionedLikelihood, μ)
