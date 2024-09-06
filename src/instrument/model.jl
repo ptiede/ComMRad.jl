@@ -216,20 +216,19 @@ end
 @inline intout(vis::AbstractArray{T}) where {T<:Complex} = similar(vis, T)
 @inline intout(vis::AbstractArray{<:CoherencyMatrix{A,B,T}}) where {A,B,T<:Complex} = similar(vis, SMatrix{2,2, T, 4})
 
-intout(vis::StructArray{<:StokesParams{T}}) where {T<:Complex} = StructArray{SMatrix{2,2, T, 4}}((vis.I, vis.Q, vis.U, vis.V))
+@inline intout(vis::StructArray{<:StokesParams{T}}) where {T<:Complex} = StructArray{SMatrix{2,2, T, 4}}((vis.I, vis.Q, vis.U, vis.V))
 
 @inline function apply_instrument(vis, J::ObservedInstrumentModel, x)
     vout = intout(parent(vis))
     # Grab parent arrary so that type inference works better for Enzyme Reverse pass
-    xint = map(parent, x.instrument)
-    for i in eachindex(vis, vout)
-        vout[i] = @inline apply_jones(vis[i], i, J, xint)
-    end
+    # for i in eachindex(vis, vout)
+    #     vout[i] = @inline apply_jones(vis[i], i, J, xint)
+    # end
     # TODO this randomly segfaults when hitting the GC if we figure out why
     # we will revert to broadcast so it works on the GPU
-    # RJ = Ref(J)
-    # Rx = Ref(xint)
-    # vout .= apply_jones.(vis, eachindex(vis), RJ, Rx)
+    RJ = Ref(J)
+    Rx = Ref(x.intinstrument)
+    vout .= apply_jones.(vis, eachindex(vis), RJ, Rx)
     return vout
 end
 
