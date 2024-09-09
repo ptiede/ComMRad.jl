@@ -31,7 +31,7 @@ abstract type AbstractVLBIPosterior end
 
 Computes the log-prior of the posterior `d` with parameters `θ`.
 """
-logprior(d::AbstractVLBIPosterior, θ) = logdensityof(d.prior, θ)
+@inline logprior(d::AbstractVLBIPosterior, θ) = logdensityof(d.prior, θ)
 LogDensityProblems.logdensity(d::AbstractVLBIPosterior, θ) = logdensityof(d, θ)
 LogDensityProblems.dimension(d::AbstractVLBIPosterior) = dimension(d)
 LogDensityProblems.capabilities(::Type{<:AbstractVLBIPosterior}) = LogDensityProblems.LogDensityOrder{0}()
@@ -52,7 +52,7 @@ instrumentmodel(d::AbstractVLBIPosterior) = getfield(d, :instrumentmodel)
 HypercubeTransform.dimension(d::AbstractVLBIPosterior) = length(d.prior)
 Enzyme.EnzymeRules.inactive(::typeof(instrumentmodel), args...) = nothing
 
-@noinline logprior_ref(d, x) = logprior(d, x[])
+# @noinline logprior_ref(d, x) = logprior(d, x[])
 
 # function ChainRulesCore.rrule(::typeof(logprior), d::AbstractVLBIPosterior, x)
 #     p = logprior(d, x)

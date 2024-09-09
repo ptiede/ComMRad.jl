@@ -227,7 +227,7 @@ end
     # TODO this randomly segfaults when hitting the GC if we figure out why
     # we will revert to broadcast so it works on the GPU
     RJ = Ref(J)
-    Rx = Ref(x.intinstrument)
+    Rx = Ref(x.instrument)
     vout .= apply_jones.(vis, eachindex(vis), RJ, Rx)
     return vout
 end
